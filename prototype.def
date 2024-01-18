@@ -1,0 +1,95 @@
+BootStrap: docker
+
+From: fedora
+
+%files 
+        #cross sections file
+
+        #/home/mtorsvoll/ /openmc_install
+
+        #depletion chains
+
+        #/home/mtorsvoll/ /openmc_install
+
+%post 
+    #ls -lh / 
+    #ls -lh / openmc_install 
+    mkdir openmc_install && cd openmc_install
+
+    ##
+    ## dependencies for openmc 
+    ##
+
+    dnf install -y cmake 
+
+    dnf install -y hdf5-devel
+
+    dnf install -y libpng-devel
+
+    dnf install -y g++ 
+
+    dnf install -y git 
+
+    dnf install -y python3.11
+
+    dnf install -y python3-pip 
+
+    #python packages
+
+    pip3 install numpy 
+
+    pip3 install pandas
+
+    pip3 install matplotlib
+
+    ##
+    ##installing openmc
+    ##
+    
+    git clone --recurse-submodules https://github.com/openmc-dev/openmc.git
+    cd openmc 
+    mkdir build && cd build 
+    cmake ..
+    make 
+    make install 
+    cd ..
+    python -m pip install .
+
+
+
+%environment 
+    export OPENMC_CROSS_SECTIONS= 
+
+
+%runscript
+    #!/usr/bin/env bash
+
+    echo "This is a singularity container for the neutron transport code"
+    echo "Based on Linux distro" $(cat /etc/redhat-release)
+    echo "Container assembled by Marius Torsvoll, 2024"
+    echo ""
+    echo "Current directory:" $(pwd)
+    echo "Content:"
+    echo "Running elegant with arguments:"
+    echo $@
+    echo
+    
+    python $@
+
+%labels
+    Author Marius Torsvoll
+
+%help 
+    This container runs the neutron transport code openMC 
+
+    To just run elegant with a given input file, run the container as
+    `apptainer run NAME.sif INPUTFILE`
+
+    or 
+
+    `./elegant.sif INPUTFILE`
+
+    To open a new shell inside the container, simply do:
+    `singularity shell elegant.sif`
+    This will give you a new terminal with openMC and related tools installed,
+    and e.g. your home directory mounted.
