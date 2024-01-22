@@ -3,18 +3,25 @@ BootStrap: docker
 From: fedora
 
 %files 
-        #cross sections file
-
-        #/home/mtorsvoll/ /openmc_install
-
-        #depletion chains
-
-        #/home/mtorsvoll/ /openmc_install
+        #Including a test case. This will run in the end as a test. 
+        /Users/mtorsvoll/documents/utvikling4580/testOMC.py /openmc_install
 
 %post 
-    #ls -lh / 
-    #ls -lh / openmc_install 
+
     mkdir openmc_install && cd openmc_install
+
+
+    ##obtaining cross sections and depletion chains
+    
+    pwd 
+    
+    dnf install wget -y
+
+    wget https://anl.box.com/shared/static/9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
+    
+    ##Depletion chains 
+    wget https://anl.box.com/shared/static/os1u896bwsbopurpgas72bi6aij2zzdc.xml
+    wget https://anl.box.com/shared/static/9058zje1gm0ekd93hja542su50pccvj0.xml
 
     ##
     ## dependencies for openmc 
@@ -28,19 +35,30 @@ From: fedora
 
     dnf install -y g++ 
 
+    dnf install -y gcc
+
     dnf install -y git 
 
-    dnf install -y python3.11
+    dnf install -y python-devel 
 
     dnf install -y python3-pip 
+    
+    dnf install -y python3-h5py
+    
+    ##
+    ##python packages
+    ##
 
-    #python packages
+    pip install --upgrade pip setuptools wheel
 
+    #pip3 install h5py
+    
     pip3 install numpy 
 
     pip3 install pandas
 
     pip3 install matplotlib
+
 
     ##
     ##installing openmc
@@ -53,31 +71,38 @@ From: fedora
     make 
     make install 
     cd ..
-    python -m pip install .
+    
+    
+    python3 -m pip install .
+
+    ##
+    ## testing openmc installation 
+    ##
+
 
 
 
 %environment 
-    export OPENMC_CROSS_SECTIONS= 
+    #export OPENMC_CROSS_SECTIONS= $HOME/openmc_install/ 
 
 
 %runscript
     #!/usr/bin/env bash
 
-    echo "This is a singularity container for the neutron transport code"
-    echo "Based on Linux distro" $(cat /etc/redhat-release)
+    echo "This is an apptainer container for the neutron transport code"
+    echo "Based on Linux distro Fedora39 for now." 
     echo "Container assembled by Marius Torsvoll, 2024"
     echo ""
     echo "Current directory:" $(pwd)
     echo "Content:"
-    echo "Running elegant with arguments:"
+    echo "Running OpenMC with arguments:"
     echo $@
     echo
     
     python $@
 
 %labels
-    Author Marius Torsvoll
+    Author: Marius Torsvoll
 
 %help 
     This container runs the neutron transport code openMC 
@@ -93,3 +118,6 @@ From: fedora
     `singularity shell elegant.sif`
     This will give you a new terminal with openMC and related tools installed,
     and e.g. your home directory mounted.
+
+    To see this help text, run
+    `apptainer run-help name.sif`
