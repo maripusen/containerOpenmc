@@ -99,7 +99,7 @@ From: fedora
     echo $@
     echo
     
-    python $@
+    python3 $@
 
 %labels
     Author: Marius Torsvoll
