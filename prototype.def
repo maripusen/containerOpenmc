@@ -3,8 +3,7 @@ BootStrap: docker
 From: fedora
 
 %files 
-        #Including a test case. This will run in the end as a test. 
-        /Users/mtorsvoll/documents/utvikling4580/testOMC.py /openmc_install
+    #redundant 
 
 %post 
 
@@ -17,6 +16,7 @@ From: fedora
     
     dnf install wget -y
 
+    ##Cross sextions 
     wget https://anl.box.com/shared/static/9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
     
     ##Depletion chains 
@@ -108,16 +108,16 @@ From: fedora
     This container runs the neutron transport code openMC 
 
     To just run elegant with a given input file, run the container as
-    `apptainer run NAME.sif INPUTFILE`
+    `apptainer run prototype.sif INPUTFILE`
 
     or 
 
-    `./elegant.sif INPUTFILE`
+    `./prototype.sif INPUTFILE`
 
     To open a new shell inside the container, simply do:
-    `singularity shell elegant.sif`
+    `apptainer shell prototype.sif`
     This will give you a new terminal with openMC and related tools installed,
     and e.g. your home directory mounted.
 
     To see this help text, run
-    `apptainer run-help name.sif`
+    `apptainer run-help prototype.sif`
