@@ -3,7 +3,7 @@ BootStrap: docker
 From: fedora
 
 %files 
-    #redundant 
+    /home/mtorsvoll.linux/endfb-vii.1-hdf5 /openmc_install
 
 %post 
 
@@ -14,14 +14,20 @@ From: fedora
     
     pwd 
     
-    dnf install wget -y
+    dnf install -y wget
 
-    ##Cross sextions 
+    dnf install -y xz 
+
+    ##Cross sections 
     wget https://anl.box.com/shared/static/9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
+    ls 
+    tar -xf 9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
     
     ##Depletion chains 
-    wget https://anl.box.com/shared/static/os1u896bwsbopurpgas72bi6aij2zzdc.xml
-    wget https://anl.box.com/shared/static/9058zje1gm0ekd93hja542su50pccvj0.xml
+    #wget https://anl.box.com/shared/static/os1u896bwsbopurpgas72bi6aij2zzdc.xml
+    #wget https://anl.box.com/shared/static/9058zje1gm0ekd93hja542su50pccvj0.xml
+
+
 
     ##
     ## dependencies for openmc 
@@ -78,12 +84,16 @@ From: fedora
     ##
     ## testing openmc installation 
     ##
-
+    cd ..
+    ls 
+    cd /endfb-vii.1-hdf5
+    ls 
+    pwd 
 
 
 
 %environment 
-    #export OPENMC_CROSS_SECTIONS= $HOME/openmc_install/ 
+    export OPENMC_CROSS_SECTIONS= $HOME/openmc_install/endfb-vii.1-hdf5/cross_sections.xml 
 
 
 %runscript
@@ -107,7 +117,7 @@ From: fedora
 %help 
     This container runs the neutron transport code openMC 
 
-    To just run elegant with a given input file, run the container as
+    To just run openMC with a given input file, run the container as
     `apptainer run prototype.sif INPUTFILE`
 
     or 
