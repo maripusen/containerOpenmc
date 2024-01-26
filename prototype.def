@@ -1,14 +1,14 @@
 BootStrap: docker
 
-From: fedora
+From: fedora:39
 
 %files 
-    /home/mtorsvoll.linux/endfb-vii.1-hdf5 /openmc_install
 
 %post 
 
     mkdir openmc_install && cd openmc_install
-
+    ls 
+    pwd 
 
     ##obtaining cross sections and depletion chains
     
@@ -17,15 +17,6 @@ From: fedora
     dnf install -y wget
 
     dnf install -y xz 
-
-    ##Cross sections 
-    wget https://anl.box.com/shared/static/9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
-    ls 
-    tar -xf 9igk353zpy8fn9ttvtrqgzvw1vtejoz6.xz
-    
-    ##Depletion chains 
-    #wget https://anl.box.com/shared/static/os1u896bwsbopurpgas72bi6aij2zzdc.xml
-    #wget https://anl.box.com/shared/static/9058zje1gm0ekd93hja542su50pccvj0.xml
 
 
 
@@ -51,6 +42,9 @@ From: fedora
     
     dnf install -y python3-h5py
     
+    dnf install -y numpy 
+
+    dnf 
     ##
     ##python packages
     ##
@@ -59,7 +53,7 @@ From: fedora
 
     #pip3 install h5py
     
-    pip3 install numpy 
+    #pip3 install numpy 
 
     pip3 install pandas
 
@@ -70,7 +64,7 @@ From: fedora
     ##installing openmc
     ##
     
-    git clone --recurse-submodules https://github.com/openmc-dev/openmc.git
+    git clone --recurse-submodules https://github.com/openmc-dev/openmc/archive/refs/tags/v0.13.3.tar.gz
     cd openmc 
     mkdir build && cd build 
     cmake ..
@@ -82,18 +76,20 @@ From: fedora
     python3 -m pip install .
 
     ##
-    ## testing openmc installation 
+    ## testing openmc cross section installation 
     ##
-    cd ..
-    ls 
-    cd /endfb-vii.1-hdf5
-    ls 
-    pwd 
+    
+    
+    #cd ..
+    #ls 
+    #cd /endfb-vii.1-hdf5
+    #ls 
+    #pwd 
 
 
 
 %environment 
-    export OPENMC_CROSS_SECTIONS= $HOME/openmc_install/endfb-vii.1-hdf5/cross_sections.xml 
+    #export OPENMC_CROSS_SECTIONS= /openmc_install/endfb-vii.1-hdf5/cross_sections.xml 
 
 
 %runscript
