@@ -3,6 +3,7 @@ BootStrap: docker
 From: fedora:39
 
 %files 
+    /Users/mtorsvoll/documents/utvikling4580/endfb-vii.1-hdf5 /openmc_install
 
 %post 
 
@@ -28,13 +29,21 @@ From: fedora:39
 
     dnf install -y hdf5-devel
 
-    dnf install -y libpng-devel
+    dnf install -y hdf5
 
-    dnf install -y g++ 
+    dnf install -y libpng-devel 
+
+    dnf install -y libpng
+
+    #dnf install -y g++ 
 
     dnf install -y gcc
 
     dnf install -y git 
+
+    dnf install -y xtensor 
+
+    #git submodule update --init
 
     dnf install -y python-devel 
 
@@ -43,6 +52,10 @@ From: fedora:39
     dnf install -y python3-h5py
     
     dnf install -y numpy 
+
+    #dnf install -y pandas
+
+    #dnf install -y matplotlib
 
     dnf 
     ##
@@ -55,18 +68,27 @@ From: fedora:39
     
     #pip3 install numpy 
 
-    pip3 install pandas
+    #pip3 install pandas
 
-    pip3 install matplotlib
+    #pip3 install matplotlib
 
 
     ##
     ##installing openmc
     ##
     
-    git clone --recurse-submodules https://github.com/openmc-dev/openmc/archive/refs/tags/v0.13.3.tar.gz
-    cd openmc 
-    mkdir build && cd build 
+    
+
+    ##
+    ## Getting openMC v0.13.3 for now. 
+    ##
+
+
+    git clone --recurse-submodules https://github.com/openmc-dev/openmc.git
+    
+    
+    cd openmc
+    mkdir build && cd build
     cmake ..
     make 
     make install 
@@ -89,7 +111,7 @@ From: fedora:39
 
 
 %environment 
-    #export OPENMC_CROSS_SECTIONS= /openmc_install/endfb-vii.1-hdf5/cross_sections.xml 
+    export OPENMC_CROSS_SECTIONS=/openmc_install/endfb-vii.1-hdf5/cross_sections.xml 
 
 
 %runscript
@@ -101,6 +123,7 @@ From: fedora:39
     echo ""
     echo "Current directory:" $(pwd)
     echo "Content:"
+    ls -lah
     echo "Running OpenMC with arguments:"
     echo $@
     echo
