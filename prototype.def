@@ -25,25 +25,21 @@ From: fedora:39
     ## dependencies for openmc 
     ##
 
-    dnf install -y cmake 
+    dnf install -y build-essential 
 
     dnf install -y hdf5-devel
 
-    dnf install -y hdf5
+    #dnf install -y hdf5
 
     dnf install -y libpng-devel 
 
-    dnf install -y libpng
-
-    #dnf install -y g++ 
+    #dnf install -y libpng
 
     dnf install -y gcc
 
     dnf install -y git 
 
     dnf install -y xtensor 
-
-    #git submodule update --init
 
     dnf install -y python-devel 
 
@@ -52,6 +48,8 @@ From: fedora:39
     dnf install -y python3-h5py
     
     dnf install -y numpy 
+
+    dnf install -y cmake 
 
     #dnf install -y pandas
 
