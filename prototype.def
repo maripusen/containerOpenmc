@@ -2,8 +2,10 @@ BootStrap: docker
 
 From: fedora:39
 
+
+
 %files 
-    /Users/mtorsvoll/documents/utvikling4580/endfb-vii.1-hdf5 /openmc_install
+    #/Users/mtorsvoll/documents/utvikling4580/endfb-vii.1-hdf5 /openmc_install
 
 %post 
 
@@ -15,6 +17,8 @@ From: fedora:39
     
     pwd 
     
+    dnf upgrade -y --refresh 
+
     dnf install -y wget
 
     dnf install -y xz 
@@ -25,23 +29,39 @@ From: fedora:39
     ## dependencies for openmc 
     ##
 
-    dnf install -y build-essential 
+    #dnf install -y build-essential 
+
+    #dnf install -y make 
+
+
+    ####
 
     dnf install -y hdf5-devel
 
-    #dnf install -y hdf5
-
     dnf install -y libpng-devel 
 
-    #dnf install -y libpng
+    #dnf install -y g++
 
     dnf install -y gcc
+
+    dnf install -y gcc-c++
+
+    dnf install -y cmake
 
     dnf install -y git 
 
     dnf install -y xtensor 
 
-    dnf install -y python-devel 
+    ##Testings 
+
+    dnf install -y mpich 
+
+    dnf install -y openmpi 
+
+    ##Python packages and such 
+
+
+    dnf install -y python-devel
 
     dnf install -y python3-pip 
     
@@ -49,13 +69,11 @@ From: fedora:39
     
     dnf install -y numpy 
 
-    dnf install -y cmake 
-
     #dnf install -y pandas
 
     #dnf install -y matplotlib
 
-    dnf 
+    
     ##
     ##python packages
     ##
