@@ -3,21 +3,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-
-
 #Defining uranium oxide material, set to real life density
 
 urox = openmc.Material(1, "uo2")
 urox.add_nuclide("U235", 0.02)
 urox.add_nuclide("U238", 0.98)
-urox.add_nuclide("O16", 2.0)
+urox.add_element("O", 2.0)
 urox.set_density("g/cm3", 10.97)
 
 
 #defining water-moderator material
 water = openmc.Material(2, "h2o")
 water.add_nuclide("H2", 2.0)
-water.add_nuclide("O16",1)
+water.add_element("O",1)
 water.add_s_alpha_beta('c_D_in_D2O')
 water.set_density("g/cm3", 1.1)
 
@@ -45,25 +43,25 @@ weird.set_density("g/cm3", 1.0)
 #Defining the major components of beer
 alcohol = openmc.Material(7,"ethanol")
 alcohol.add_element("C", 2)
-alcohol.add_nuclide("O16", 1)
+alcohol.add_element("O", 1)
 alcohol.add_element("H", 6)
 alcohol.set_density("g/cm3", 0.789)
 
 water_b = openmc.Material(8,"water")
 water_b.add_element("H",2)
-water_b.add_nuclide("O16",1)
+water_b.add_element("O",1)
 water_b.set_density("g/cm3", 1)
 
 
 #Carbonation materials
 carbonation_solution = openmc.Material(9, "CO2")
 carbonation_solution.add_element("C",1)
-carbonation_solution.add_nuclide("O16",2)
+carbonation_solution.add_element("O",2)
 carbonation_solution.set_density("g/cm3",0.0057)
 
 carbonation_gas = openmc.Material(10, "CO2")
 carbonation_gas.add_element("C",1)
-carbonation_gas.add_nuclide("O16",2)
+carbonation_gas.add_element("O",2)
 carbonation_gas.set_density("kg/m3", 0.001965)
 
 
@@ -71,13 +69,13 @@ carbonation_gas.set_density("kg/m3", 0.001965)
 humulone = openmc.Material(11, "humulone")
 humulone.add_element("C",21)
 humulone.add_element("H",30)
-humulone.add_nuclide("O16",5)
+humulone.add_element("O",5)
 humulone.set_density("g/cm3",1.157)
 
 #Sugars
 glucose = openmc.Material(12,"sugar")
 glucose.add_element("C", 6)
-glucose.add_nuclide("O16", 6)
+glucose.add_element("O", 6)
 glucose.add_element("H",12)
 glucose.set_density("g/cm3",1.56)
 
@@ -170,7 +168,6 @@ materials = openmc.Materials([urox, water, zirc, helium, graphite,
                               carbonation_gas,alcohol, water_b, carbonation_solution,humulone, glucose, 
                               beer, calcium, iron, copper, zinc, chlorine, potassium, magnesium, manganese, 
                               sodium, silicon, phosphorus])
-materials.cross_sections = "/home/mtorsvoll.linux/nndc_hdf5/cross_sections.xml"
 materials.export_to_xml()
 
 
