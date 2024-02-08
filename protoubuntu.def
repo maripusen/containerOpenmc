@@ -1,0 +1,90 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%files 
+    #/home/mtorsvoll.linux/nndc_hdf5 /cross_sections
+    #/home/mtorsvoll.linux/endfb-vii.1-hdf5 /cross_sections
+
+
+
+%post
+    #Making the package manager update. 
+    apt-get update
+    apt install -y wget
+    apt install -y xz-utils
+    mkdir cross_sections
+
+
+    ls 
+    cd /cross_sections
+    pwd 
+    ls 
+    
+
+    #Getting CS libs
+
+    echo $SHELL 
+
+    mkdir openmc_install && cd openmc_install
+    ls 
+    pwd 
+
+    
+
+    apt install -y g++ cmake libhdf5-dev libpng-dev
+
+    apt install -y git python3 python3-pip
+
+    pip3 install --upgrade pip setuptools wheel
+
+    git clone --recurse-submodules https://github.com/openmc-dev/openmc.git
+    cd openmc
+    mkdir build && cd build
+    cmake ..
+    make
+    make install
+
+    cd ..
+
+    python3 -m pip install .
+
+%environment 
+    #export OPENMC_CROSS_SECTIONS=~/cross_sections/nndc_hdf5/cross_sections.xml
+
+%runscript
+    #!/usr/bin/env bash
+
+    echo "This is an apptainer container for the neutron transport code"
+    echo "Based on Linux distro Ubuntu:22.04 for now." 
+    echo "Container assembled by Marius Torsvoll, 2024"
+    echo ""
+    echo "Current directory:" $(pwd)
+    echo "Content:"
+    ls -lah
+    echo "SIF created:" $(cat /sifdate.txt)
+    echo "Running OpenMC with arguments:"
+    echo $@
+    echo
+    
+    python3 $@
+
+%labels
+    Author: Marius Torsvoll for FYS4580 @ UiO 
+
+%help 
+    This container runs the neutron transport code openMC 
+
+    To just run openMC with a given input file, run the container as
+    `apptainer run protoubuntu.sif INPUTFILE`
+
+    or 
+
+    `./prototype.sif INPUTFILE`
+
+    To open a new shell inside the container, simply do:
+    `apptainer shell prototype.sif`
+    This will give you a new terminal with openMC and related tools installed,
+    and e.g. your home directory mounted.
+
+    To see this help text, run
+    `apptainer run-help prototype.sif`
