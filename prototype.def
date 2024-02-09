@@ -8,6 +8,7 @@ From: fedora:39
     #/Users/mtorsvoll/documents/utvikling4580/endfb-vii.1-hdf5 /openmc_install
 
 %post 
+    echo $SHELL 
 
     mkdir openmc_install && cd openmc_install
     ls 
@@ -17,8 +18,8 @@ From: fedora:39
     
     pwd 
     
-    dnf upgrade -y --refresh 
-
+    #dnf upgrade -y --refresh 
+    dnf makecache -y --refresh
     dnf install -y wget
 
     dnf install -y xz 
@@ -38,13 +39,27 @@ From: fedora:39
 
     dnf install -y hdf5-devel
 
+    #dnf install -y hdf5 
+
     dnf install -y libpng-devel 
 
-    #dnf install -y g++
+    #dnf install -y libtool
+
+    dnf groupinstall -y "Development Tools" "Development Libraries"
 
     dnf install -y gcc
 
-    dnf install -y gcc-c++
+    #dnf install -y clang
+
+    #dnf install -y fmt 
+
+    #dnf install -y gsl
+
+    #dnf install -y automake 
+
+    #dnf install -y kernel-devel
+
+    dnf install -y g++
 
     dnf install -y cmake
 
@@ -66,7 +81,10 @@ From: fedora:39
     dnf install -y python3-pip 
     
     dnf install -y python3-h5py
-    
+
+    dnf install -y cython
+
+
     dnf install -y numpy 
 
     #dnf install -y pandas
@@ -78,7 +96,9 @@ From: fedora:39
     ##python packages
     ##
 
-    pip install --upgrade pip setuptools wheel
+    pip3 install --upgrade pip setuptools wheel
+
+    #pip3 install xtensor
 
     #pip3 install h5py
     
@@ -92,27 +112,39 @@ From: fedora:39
     ##
     ##installing openmc
     ##
-    
-    
 
-    ##
-    ## Getting openMC v0.13.3 for now. 
-    ##
-
-
-    git clone --recurse-submodules https://github.com/openmc-dev/openmc.git
+    #git clone --recurse-submodules https://github.com/openmc-dev/openmc.git
     
     
-    cd openmc
-    mkdir build && cd build
-    cmake ..
-    make 
-    make install 
+    #cd openmc
+    #mkdir build && cd build
+    #cmake -DCMAKE_CXX_COMPILER=/usr/bin/g++ ..
+    #make 
+    #make install 
+    #cd ..
+    
+    
+    #python3 -m pip install .
+
+
+    #attempting conda install 
+    mkdir -p ~/miniconda3
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh -O ~/miniconda3/miniconda.sh
+    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+    rm -rf ~/miniconda3/miniconda.sh
+
+    ~/miniconda3/bin/conda init bash
+    source ~/.bash_profile
+    source ~/.bashrc
+
     cd ..
-    
-    
-    python3 -m pip install .
 
+    conda config --add channels conda-forge
+    
+    conda create --name openmc_env python=3.11
+    conda activate openmc_env
+    conda install -c conda-forge openmc
+    
     ##
     ## testing openmc cross section installation 
     ##
@@ -127,7 +159,7 @@ From: fedora:39
 
 
 %environment 
-    export OPENMC_CROSS_SECTIONS=/openmc_install/endfb-vii.1-hdf5/cross_sections.xml 
+    #export OPENMC_CROSS_SECTIONS=~/openmc_install/endfb-vii.1-hdf5/cross_sections.xml 
 
 
 %runscript
