@@ -1,0 +1,113 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%files
+    #/home/mtorsvoll.linux/nndc_hdf5 /cross_sections
+    #/home/mtorsvoll.linux/endfb-vii.1-hdf5 /cross_sections
+
+
+
+%post
+    #Making the package manager update.
+    apt update
+    apt-get update
+
+    apt install -y wget
+    apt install -y xz-utils
+    mkdir cross_sections
+
+
+    ls
+    cd /cross_sections
+    pwd
+    ls
+
+
+    
+
+    echo $SHELL
+
+    mkdir openmc_install && cd openmc_install
+    ls
+    pwd
+
+
+
+    apt install -y g++ cmake libhdf5-dev libpng-dev
+
+    apt install -y git python3 python3-pip 
+    #python3-ipykernel
+
+
+    pip3 install --upgrade pip setuptools wheel
+
+
+    git clone --recurse-submodules https://github.com/openmc-dev/openmc.git
+    cd openmc
+    mkdir build && cd build
+    cmake ..
+    make
+    make install
+
+    cd ..
+
+    python3 -m pip install .
+
+%environment
+    echo "Container active, OpenMC is ready"
+    export OPENMC_CROSS_SECTIONS=./nndc_hdf5_v15/nndc_hdf5/cross_sections.xml
+    #GREEN="\[$(tput setaf 2)\]"
+    #RED="\[$(tput setaf 3)\]"
+    #RESET="\[$(tput sgr0)\]"
+    #export PS1="${GREEN}OpenMC env${RESET} ${RED}0.1.0 ${RESET} >"
+    export PS1="OpenMC-env-0.1.0 >"
+
+%runscript
+    #!/usr/bin/env bash
+
+    echo "This is an apptainer container for the neutron transport code"
+    echo "Based on Linux distro Ubuntu:22.04 for now."
+    echo "Container assembled by Marius Torsvoll, 2024"
+    echo ""
+    echo "Current directory:" $(pwd)
+    echo "Content:"
+    ls -lah
+    echo "SIF created:" $(cat /sifdate.txt)
+    echo "Running OpenMC with arguments:"
+    echo $@
+    echo
+
+    python3 $@
+
+%labels
+    Author: Marius Torsvoll for FYS4580 @ UiO
+
+%help
+    Made by Marius Torsvoll Feb 2024
+    
+    This container runs the neutron transport code openMC
+
+    To just run openMC with a given input file, run the container as
+    `apptainer run OMC_cont_010.sif INPUTFILE`
+
+    or
+
+    `./OMC_cont_010.sif INPUTFILE`
+
+    To open a new shell inside the container, simply do:
+    `apptainer shell prototype.sif`
+    This will give you a new terminal with openMC and related tools installed,
+    and e.g. your home directory mounted.
+
+    To see this help text, run
+    `apptainer run-help OMC_cont_010.sif`
+
+    This instance includes python and openmc all tools needed to complete
+    the UiO course FYS4580. It is based on Ubuntu 22.04
+
+    This apptainer uses the nndc_hdf5_v15 cross sections. To use 
+    other cross section libraries these must be manually set in the 
+    python script. 
+
+    To use depletion chains these must also be set manually in the script.
+
